@@ -3,12 +3,12 @@ encoding system utf-8
 package require Tk
 
 proc changeNet { ssid } {
-    if {$ssid != $::current} {
-        exec nmcli connection up "$ssid"
+    if {$ssid != $::current || [string trim $ssid] != ""} {
+        exec nmcli connection up [string trim "$ssid"]
     }
     
-    if {[file exists ~/bin/connection.tmp]} {
-        file delete ~/bin/connection.tmp
+    if {[file exists /tmp/connection.tmp]} {
+        file delete /tmp/connection.tmp
     }
     exit
 }
@@ -19,8 +19,8 @@ set first true
 set ::checked 1
 set ::current ""
 
-exec nmcli connection show > ~/bin/connection.tmp
-set fp [open ~/bin/connection.tmp]
+exec nmcli connection show > /tmp/connection.tmp
+set fp [open /tmp/connection.tmp]
 set data [read $fp]
 close $fp
 
